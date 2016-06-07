@@ -1,0 +1,34 @@
+API PATHS:
+Base Path:	http://whereismypizero.com/api/public/stock/
+
+Adafruit:	adafruit
+Element14:	element14
+Pimoroni:	pimoroni
+Pisupply:	pisupply
+ThePiHut:	thepihut
+
+
+DEVELOPER USAGE:
+"use strict";
+function fetch(store){
+    var httpRequest = new XMLHttpRequest();
+    httpRequest.onreadystatechange = function(){
+        if(httpRequest.readyState==4){
+            if(httpRequest.status==200){
+                //console.log(httpRequest.responseText);
+                var data=JSON.parse(httpRequest.responseText);
+                document.getElementById(store).innerHTML=data[store];
+            }
+            else// error lets try that again
+                setTimeout("fetch('"+store+"');",3000);
+        }
+    };
+    httpRequest.open('GET','/api/public/stock/'+store);
+    httpRequest.send(null);
+}
+window.addEventListener('load',function(){
+    var stores=["adafruit","pisupply","pimoroni","thepihut","element14"],i
+    for(i=0;i<stores.length;i++){
+        fetch(stores[i]);
+    }
+},false);
